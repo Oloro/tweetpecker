@@ -4,7 +4,7 @@ module.exports = {
     node: true
   },
   extends: [
-    "plugin:vue/essential",
+    "plugin:vue/recommended",
     "eslint:recommended",
     "@vue/typescript/recommended",
     "@vue/prettier",
@@ -14,6 +14,8 @@ module.exports = {
     ecmaVersion: 2020
   },
   rules: {
+    "prettier/prettier": ["error", {"singleQuote": true}],
+    "quotes": ["error", "single"],
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"
   },

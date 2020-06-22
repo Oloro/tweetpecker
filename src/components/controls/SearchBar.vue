@@ -6,9 +6,9 @@
       type="url"
       name="tweet_rul"
       :placeholder="searchPlaceholder"
-      class="w-11/12 ml-2 text-gray-900 align-middle outline-none"
+      class="w-10/12 ml-2 text-gray-900 align-middle outline-none lg:w-11/12"
       @focus="searchPlaceholder = ''"
-      @blur="searchPlaceholder = 'Tweet url...'"
+      @blur="searchPlaceholder = 'Twitter url...'"
     />
   </div>
 </template>
@@ -18,7 +18,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class SearchBar extends Vue {
-  searchPlaceholder = 'Tweet url...';
+  searchPlaceholder = 'Twitter url...';
 }
 </script>
 

@@ -5,10 +5,7 @@
       class="absolute w-12 duration-100 transition-width md:w-20"
       alt=""
     />
-    <app-search-view
-      v-if="!$store.state.isTweetLoaded"
-      @change="linkChanged"
-    ></app-search-view>
+    <app-search-view v-if="!$store.state.isTweetLoaded"></app-search-view>
   </div>
 </template>
 
@@ -21,11 +18,7 @@ import SearchView from './SearchView.vue';
     'app-search-view': SearchView
   }
 })
-export default class Main extends Vue {
-  linkChanged(url: string) {
-    console.log(url);
-  }
-}
+export default class Main extends Vue {}
 </script>
 
 <style scoped></style>

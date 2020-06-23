@@ -18,10 +18,24 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+const SearchBarProped = Vue.extend({
+  model: {
+    prop: 'inputProp',
+    event: 'change'
+  },
+  props: {
+    inputProp: {
+      type: String,
+      required: true,
+      default: ''
+    }
+  }
+});
+
 @Component
-export default class SearchBar extends Vue {
+export default class SearchBar extends SearchBarProped {
+  inputValue = this.inputProp;
   searchPlaceholder = 'Twitter url...';
-  inputValue = '';
 }
 </script>
 

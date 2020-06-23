@@ -11,18 +11,29 @@
       <h2 class="mt-4 font-semibold text-gray-800 text-l">
         Paste the tweet link...
       </h2>
-      <app-search-bar class="mt-2" @change="inputChanged"></app-search-bar>
+      <app-search-bar
+        v-model="searchInput"
+        class="mt-2"
+        @change="validateSearch"
+      ></app-search-bar>
       <!-- <app-btn class="w-full mt-4 md:w-3/12">Load</app-btn> -->
       <h2 class="mt-4 font-semibold text-gray-800 text-l">
         ...to sort, filter and pick what's actually important for you.
       </h2>
+      <app-alert type="info" class="my-2">Paste a link!</app-alert>
+      <app-alert type="warning" class="mb-2"
+        >This tweet is not public so it can't be loaded.</app-alert
+      >
+      <app-alert type="error" class="mt-2"
+        >This is not a link to a tweet.</app-alert
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import SearchBar from './controls/SearchBar.vue';
+import SearchBar from './subcomponents/SearchBar.vue';
 
 @Component({
   components: {
@@ -30,8 +41,9 @@ import SearchBar from './controls/SearchBar.vue';
   }
 })
 export default class SearchView extends Vue {
-  inputChanged(url: string) {
-    this.$emit('change', url);
+  searchInput = '';
+  validateSearch() {
+    console.log('what');
   }
 }
 </script>

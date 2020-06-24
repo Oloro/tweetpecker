@@ -20,13 +20,9 @@
       <h2 class="mt-4 font-semibold text-gray-800 text-l">
         ...to sort, filter and pick what's actually important for you.
       </h2>
-      <app-alert type="info" class="my-2">Paste a link!</app-alert>
-      <app-alert type="warning" class="mb-2"
-        >This tweet is not public so it can't be loaded.</app-alert
-      >
-      <app-alert type="error" class="mt-2"
-        >This is not a link to a tweet.</app-alert
-      >
+      <app-alert v-if="alert.isVisible" :type="alert.type" class="my-2">{{
+        alert.message
+      }}</app-alert>
     </div>
   </div>
 </template>
@@ -43,8 +39,24 @@ import SearchBar from './subcomponents/SearchBar.vue';
 export default class SearchView extends Vue {
   searchInput = '';
   validateSearch() {
-    console.log('what');
+    if (!this.isValidTweetUrl(this.searchInput)) {
+      this.alert.type = 'error';
+      this.alert.message = 'This is not a valid tweet link.';
+      this.alert.isVisible = true;
+    } else {
+      this.alert.isVisible = false;
+    }
   }
+
+  isValidTweetUrl(url: string): boolean {
+    return /^(?:https:\/\/)*twitter.com\/\w+\/status\/\d+$/g.test(url);
+  }
+
+  alert: { isVisible: boolean; type: string; message: string } = {
+    isVisible: false,
+    type: '',
+    message: ''
+  };
 }
 </script>
 

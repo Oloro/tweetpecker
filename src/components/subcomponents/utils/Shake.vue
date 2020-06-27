@@ -10,8 +10,8 @@ import anime from 'animejs';
 
 @Component
 export default class Shake extends Vue {
-  @Prop({ default: '350', type: Number }) duration!: number;
-  @Prop({ default: '0', type: Number }) delay!: number;
+  @Prop({ default: 250, type: Number }) duration!: number;
+  @Prop({ default: 0, type: Number }) delay!: number;
 
   beforeEnter(el: HTMLElement) {
     el.style.opacity = '0';

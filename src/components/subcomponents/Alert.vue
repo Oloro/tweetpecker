@@ -6,26 +6,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
-const AlertProped = Vue.extend({
-  props: {
-    type: {
-      required: true,
-      type: String
-    }
-  }
-});
-
-@Component({
-  props: {
-    type: {
-      required: true,
-      type: String
-    }
-  }
-})
-export default class Alert extends AlertProped {}
+@Component
+export default class Alert extends Vue {
+  @Prop({ required: true, type: String }) readonly type!: string;
+}
 </script>
 
 <style scoped>

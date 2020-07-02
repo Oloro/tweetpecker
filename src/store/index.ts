@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     threadUrl: '',
-    ThreadData: {},
+    threadData: {},
     isThreadLoaded: false
   },
   mutations: {
@@ -17,7 +17,7 @@ export default new Vuex.Store({
       state.isThreadLoaded = value;
     },
     SET_THREAD_DATA(state, data) {
-      state.ThreadData = data;
+      state.threadData = data;
     }
   },
   actions: {

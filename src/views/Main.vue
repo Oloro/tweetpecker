@@ -5,17 +5,20 @@
       class="absolute w-12 duration-100 transition-width md:w-20"
       alt=""
     />
-    <app-search-view v-if="!$store.state.isTweetLoaded"></app-search-view>
+    <app-search-view v-if="!$store.state.isThreadLoaded"></app-search-view>
+    <app-thread-view v-else></app-thread-view>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import SearchView from './SearchView.vue';
+import ThreadView from './ThreadView.vue';
 
 @Component({
   components: {
-    'app-search-view': SearchView
+    'app-search-view': SearchView,
+    'app-thread-view': ThreadView
   }
 })
 export default class Main extends Vue {}

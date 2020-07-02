@@ -37,8 +37,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import SearchBar from './subcomponents/SearchBar.vue';
-import Shake from './subcomponents/utils/Shake.vue';
+import SearchBar from '../components/subcomponents/SearchBar.vue';
+import Shake from '../components/subcomponents/utils/Shake.vue';
 import anime from 'animejs';
 import { AxiosResponse } from 'axios';
 

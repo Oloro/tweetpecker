@@ -16,10 +16,11 @@
       </h2>
       <app-search-bar
         v-model="searchInput"
-        class="mt-2"
-        @change="fetchThread"
+        :loading-status="isThreadLoading"
+        class="my-2"
+        @change="updateInput"
       ></app-search-bar>
-      <h2 class="mt-4 font-semibold text-gray-800 text-l">
+      <h2 class="font-semibold text-gray-800 text-l">
         ...to sort, <s>filter</s> (soon!) and <s>pick</s> (soon!) what's
         actually important for you.
       </h2>
@@ -78,21 +79,37 @@ export default class SearchView extends Vue {
     }
   }
 
+  updateInput(inputValue: string) {
+    this.searchInput = inputValue;
+    this.fetchThread();
+  }
+
   async fetchThread(): Promise<boolean> {
-    if (!this.isSearchValid) return false;
+    this.isThreadLoading = true;
+    if (!this.isSearchValid) {
+      this.isThreadLoading = false;
+      return false;
+    }
     const thread = await this.axios.get(
       `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/api/tweet`,
       {
         params: {
           url: this.searchInput,
           count: 500
-        }
+        },
+        validateStatus: () => true
       }
     );
-    if (!this.isValidThread(thread)) return Promise.resolve(false);
+    if (!this.isValidThread(thread)) {
+      console.log('nieprawidłowy, kasować');
+      this.searchInput = '';
+      this.isThreadLoading = false;
+      return Promise.resolve(false);
+    }
     this.$store.dispatch('setThreadUrl', this.searchInput);
     this.$store.dispatch('setThreadData', thread.data.posts);
     this.$store.dispatch('setIsThreadLoaded', true);
+    this.isThreadLoading = false;
     return Promise.resolve(true);
   }
 

@@ -39,6 +39,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import SearchBar from './subcomponents/SearchBar.vue';
 import Shake from './subcomponents/utils/Shake.vue';
 import anime from 'animejs';
+import { AxiosResponse } from 'axios';
 
 @Component({
   components: {
@@ -47,53 +48,78 @@ import anime from 'animejs';
   }
 })
 export default class SearchView extends Vue {
+  isThreadLoading = false;
   searchInput = '';
-  validateSearch(): boolean {
-    if (this.searchInput) {
-      if (!this.isValidTweetUrl(this.searchInput)) {
-        this.alert.type = 'error';
-        this.alert.message = 'This is not a valid tweet link.';
-        this.alert.isVisible = true;
-        return false;
-      } else {
-        this.alert.isVisible = false;
-        return true;
-      }
-    } else {
-      this.alert.isVisible = false;
+  get isSearchValid(): boolean {
+    if (this.searchInput === '') {
+      this.clearAlert();
       return false;
+    }
+    if (!this.isValidTweetUrl(this.searchInput)) {
+      this.setAlert('warning', 'This is not a valid tweet link.');
+      return false;
+    } else {
+      this.clearAlert();
+      return true;
     }
   }
 
   isValidTweetUrl(url: string): boolean {
-    return /^(?:https:\/\/)*twitter.com\/\w+\/status\/\d+$/g.test(url);
+    return /^(?:https?:\/\/)*twitter.com\/\w+\/status\/\d+$/.test(url);
+  }
+
+  isValidThread(thread: AxiosResponse): boolean {
+    if (thread.status === 200) {
+      this.clearAlert();
+      return true;
+    } else {
+      this.setAlert('error', thread.data.message);
+      return false;
+    }
   }
 
   async fetchThread(): Promise<boolean> {
-    if (!this.validateSearch()) return false;
+    if (!this.isSearchValid) return false;
     const thread = await this.axios.get(
       `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/api/tweet`,
       {
         params: {
           url: this.searchInput,
-          count: 50
+          count: 500
         }
       }
     );
-    console.log(thread.data);
+    if (!this.isValidThread(thread)) return Promise.resolve(false);
+    this.$store.dispatch('setThreadUrl', this.searchInput);
+    this.$store.dispatch('setThreadData', thread.data.posts);
+    this.$store.dispatch('setIsThreadLoaded', true);
     return Promise.resolve(true);
   }
 
-  alert: { isVisible: boolean; type: string; message: string } = {
+  alert: {
+    isVisible: boolean;
+    type: 'info' | 'warning' | 'error';
+    message: string;
+  } = {
     isVisible: false,
-    type: '',
+    type: 'info',
     message: ''
   };
 
+  setAlert(type: 'info' | 'warning' | 'error', message: string): void {
+    this.alert.type = type;
+    this.alert.message = message;
+    this.alert.isVisible = true;
+  }
+
+  clearAlert() {
+    this.alert.isVisible = false;
+    this.alert.message = '';
+  }
+
   mounted() {
-    console.log('created');
     const elementsToStagger = document
-      .getElementById('anime-stagger-container')!
+      .getElementById('anime-stagger-container')! // forbidden non-null assertion?
       .querySelectorAll('h1, h2, div');
 
     elementsToStagger.forEach(el => {
@@ -105,18 +131,9 @@ export default class SearchView extends Vue {
       translateY: 20,
       opacity: 1,
       duration: 1000,
-      delay: anime.stagger(20, { start: 500 })
+      delay: anime.stagger(20, { start: 300 })
     });
   }
-
-  // mounted() {
-  //   anime({
-  //     targets: '.anime-stagger-container *',
-  //     translateY: 20,
-  //     duration: 1000,
-  //     delay: 500
-  //   });
-  // }
 }
 </script>
 

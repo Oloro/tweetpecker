@@ -30,7 +30,7 @@ export default class Shake extends Vue {
       easing: 'cubicBezier(.5, .05, .1, .3)',
       opacity: {
         value: 1,
-        duration: this.duration / 3
+        duration: this.duration / 4
       },
       duration: this.duration,
       delay: this.delay

@@ -5,30 +5,30 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    tweetUrl: '',
-    tweetData: {},
-    isTweetLoaded: false
+    threadUrl: '',
+    ThreadData: {},
+    isThreadLoaded: false
   },
   mutations: {
-    SET_TWEET_URL(state, value) {
-      state.tweetUrl = value;
+    SET_THREAD_URL(state, value) {
+      state.threadUrl = value;
     },
-    SET_IS_TWEET_LOADED(state, value) {
-      state.isTweetLoaded = value;
+    SET_IS_THREAD_LOADED(state, value) {
+      state.isThreadLoaded = value;
     },
-    SET_TWEET_DATA(state, data) {
-      state.tweetData = data;
+    SET_THREAD_DATA(state, data) {
+      state.ThreadData = data;
     }
   },
   actions: {
-    setTweetUrl(context, url) {
-      context.commit('SET_TWEET_URL', url);
+    setThreadUrl(context, url) {
+      context.commit('SET_THREAD_URL', url);
     },
-    setIsTweetLoaded(context, value) {
-      context.commit('SET_IS_TWEET_LOADED', value);
+    setIsThreadLoaded(context, value) {
+      context.commit('SET_IS_THREAD_LOADED', value);
     },
-    setTweetData(context, data) {
-      context.commit('SET_TWEET_DATA', data);
+    setThreadData(context, data) {
+      context.commit('SET_THREAD_DATA', data);
     }
   },
   modules: {}

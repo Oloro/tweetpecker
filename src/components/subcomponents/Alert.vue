@@ -10,7 +10,10 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class Alert extends Vue {
-  @Prop({ required: true, type: String }) readonly type!: string;
+  @Prop({ required: true, type: String }) readonly type!:
+    | 'info'
+    | 'warning'
+    | 'error';
 }
 </script>
 

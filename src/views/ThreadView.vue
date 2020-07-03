@@ -1,7 +1,7 @@
 <template>
-  <div class="w-1/2 h-full mx-auto overflow-auto">
+  <div class="w-11/12 h-full mx-auto overflow-auto md:w-4/5 lg:w-2/3 xl:w-1/2">
     <div v-for="post in posts" :key="post.idStr">
-      {{ post.fullText }}
+      <div class="p-2 m-2 bg-white">{{ post.fullText }}</div>
     </div>
   </div>
 </template>

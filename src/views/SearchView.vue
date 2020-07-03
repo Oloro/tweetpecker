@@ -90,27 +90,35 @@ export default class SearchView extends Vue {
       this.isThreadLoading = false;
       return false;
     }
-    const thread = await this.axios.get(
-      `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/api/tweet`,
-      {
-        params: {
-          url: this.searchInput,
-          count: 500
-        },
-        validateStatus: () => true
+    let thread;
+    try {
+      thread = await this.axios.get(
+        `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/api/tweet`,
+        {
+          timeout: 15000,
+          params: {
+            url: this.searchInput,
+            count: 500
+          },
+          validateStatus: () => true
+        }
+      );
+      if (!this.isValidThread(thread)) {
+        this.searchInput = '';
+        this.isThreadLoading = false;
+        return Promise.resolve(false);
       }
-    );
-    if (!this.isValidThread(thread)) {
-      console.log('nieprawidłowy, kasować');
+      this.$store.dispatch('setThreadUrl', this.searchInput);
+      this.$store.dispatch('setThreadData', thread.data.posts);
+      this.$store.dispatch('setIsThreadLoaded', true);
+      this.isThreadLoading = false;
+      return Promise.resolve(true);
+    } catch (error) {
+      this.setAlert('error', 'Oops! Something went wrong. Try later!');
       this.searchInput = '';
       this.isThreadLoading = false;
       return Promise.resolve(false);
     }
-    this.$store.dispatch('setThreadUrl', this.searchInput);
-    this.$store.dispatch('setThreadData', thread.data.posts);
-    this.$store.dispatch('setIsThreadLoaded', true);
-    this.isThreadLoading = false;
-    return Promise.resolve(true);
   }
 
   alert: {

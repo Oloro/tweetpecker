@@ -1,11 +1,14 @@
 <template>
-  <div class="h-screen p-4 bg-blue-200">
+  <div class="bg-blue-200">
     <img
       src="../assets/logo.png"
-      class="absolute w-12 duration-100 transition-width md:w-20"
+      class="absolute w-12 mt-4 ml-4 duration-100 transition-width md:w-20"
       alt=""
     />
-    <app-search-view v-if="!$store.state.isThreadLoaded"></app-search-view>
+    <app-search-view
+      v-if="!$store.state.isThreadLoaded"
+      class="h-screen"
+    ></app-search-view>
     <app-thread-view v-else></app-thread-view>
   </div>
 </template>

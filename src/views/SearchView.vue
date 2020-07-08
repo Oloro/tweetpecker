@@ -66,7 +66,9 @@ export default class SearchView extends Vue {
   }
 
   isValidTweetUrl(url: string): boolean {
-    return /^(?:https?:\/\/)*twitter.com\/\w+\/status\/\d+$/.test(url);
+    return /^(?:https?:\/\/)*(?:mobile.)*twitter.com\/\w+\/status\/\d+$/.test(
+      url
+    );
   }
 
   isValidThread(thread: AxiosResponse): boolean {
@@ -109,7 +111,7 @@ export default class SearchView extends Vue {
         return Promise.resolve(false);
       }
       this.$store.dispatch('setThreadUrl', this.searchInput);
-      this.$store.dispatch('setThreadData', thread.data.posts);
+      this.$store.dispatch('setThreadData', thread.data.data);
       this.$store.dispatch('setIsThreadLoaded', true);
       this.isThreadLoading = false;
       return Promise.resolve(true);

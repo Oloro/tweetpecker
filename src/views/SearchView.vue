@@ -14,12 +14,7 @@
       <h2 class="mt-4 font-semibold text-gray-800 text-l">
         Paste the tweet link...
       </h2>
-      <app-search-bar
-        v-model="searchInput"
-        :loading-status="isThreadLoading"
-        class="my-2"
-        @change="updateInput"
-      ></app-search-bar>
+      <app-search-bar class="my-2" @error="setAlert"></app-search-bar>
       <h2 class="font-semibold text-gray-800 text-l">
         ...to sort, <s>filter</s> (soon!) and <s>pick</s> (soon!) what's
         actually important for you.
@@ -40,7 +35,6 @@ import { Component, Vue } from 'vue-property-decorator';
 import SearchBar from '../components/subcomponents/SearchBar.vue';
 import Shake from '../components/subcomponents/utils/Shake.vue';
 import anime from 'animejs';
-import { AxiosResponse } from 'axios';
 
 @Component({
   components: {
@@ -49,83 +43,9 @@ import { AxiosResponse } from 'axios';
   }
 })
 export default class SearchView extends Vue {
-  isThreadLoading = false;
-  searchInput = '';
-  get isSearchValid(): boolean {
-    if (this.searchInput === '') {
-      this.clearAlert();
-      return false;
-    }
-    if (!this.isValidTweetUrl(this.searchInput)) {
-      this.setAlert('warning', 'This is not a valid tweet link.');
-      return false;
-    } else {
-      this.clearAlert();
-      return true;
-    }
-  }
-
-  isValidTweetUrl(url: string): boolean {
-    return /^(?:https?:\/\/)*(?:mobile.)*twitter.com\/\w+\/status\/\d+$/.test(
-      url
-    );
-  }
-
-  isValidThread(thread: AxiosResponse): boolean {
-    if (thread.status === 200) {
-      this.clearAlert();
-      return true;
-    } else {
-      this.setAlert('error', thread.data.message);
-      return false;
-    }
-  }
-
-  updateInput(inputValue: string) {
-    this.searchInput = inputValue;
-    this.fetchThread();
-  }
-
-  async fetchThread(): Promise<boolean> {
-    this.isThreadLoading = true;
-    if (!this.isSearchValid) {
-      this.isThreadLoading = false;
-      return false;
-    }
-    let thread;
-    try {
-      thread = await this.axios.get(
-        `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/api/tweet`,
-        {
-          timeout: 15000,
-          params: {
-            url: this.searchInput,
-            count: 500
-          },
-          validateStatus: () => true
-        }
-      );
-      if (!this.isValidThread(thread)) {
-        this.searchInput = '';
-        this.isThreadLoading = false;
-        return Promise.resolve(false);
-      }
-      this.$store.dispatch('setThreadUrl', this.searchInput);
-      this.$store.dispatch('setThreadData', thread.data.data);
-      this.$store.dispatch('setIsThreadLoaded', true);
-      this.isThreadLoading = false;
-      return Promise.resolve(true);
-    } catch (error) {
-      this.setAlert('error', 'Oops! Something went wrong. Try later!');
-      this.searchInput = '';
-      this.isThreadLoading = false;
-      return Promise.resolve(false);
-    }
-  }
-
   alert: {
     isVisible: boolean;
-    type: 'info' | 'warning' | 'error';
+    type: 'info' | 'warning' | 'error' | 'noError';
     message: string;
   } = {
     isVisible: false,
@@ -133,10 +53,17 @@ export default class SearchView extends Vue {
     message: ''
   };
 
-  setAlert(type: 'info' | 'warning' | 'error', message: string): void {
-    this.alert.type = type;
-    this.alert.message = message;
-    this.alert.isVisible = true;
+  setAlert(
+    type: 'info' | 'warning' | 'error' | 'noError',
+    message: string
+  ): void {
+    console.log('cos');
+    if (type === 'noError') this.clearAlert();
+    else {
+      this.alert.type = type;
+      this.alert.message = message;
+      this.alert.isVisible = true;
+    }
   }
 
   clearAlert() {

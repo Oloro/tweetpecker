@@ -56,8 +56,6 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 export default class Post extends Vue {
   @Prop({ required: true }) postData!: any;
 
-  createdAtFormat = '';
-
   get createdAtFormated() {
     return this.postData.content.createdAt;
   }

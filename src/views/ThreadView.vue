@@ -6,6 +6,7 @@
     <div class="mt-8 mb-16">
       <app-search-bar
         v-model="searchInput"
+        :loading-status="isThreadLoading"
         class="inline-block w-10/12 "
       ></app-search-bar>
       <div class="inline-block w-2/12">
@@ -40,6 +41,7 @@ import { mapState } from 'vuex';
   }
 })
 export default class ThreadView extends Vue {
+  isThreadLoading = false;
   searchInput: string = this.$store.state.threadUrl;
   postsData: Array<any> = [];
 

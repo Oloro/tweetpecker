@@ -14,7 +14,11 @@
       <h2 class="mt-4 font-semibold text-gray-800 text-l">
         Paste the tweet link...
       </h2>
-      <app-search-bar class="my-2" @error="setAlert"></app-search-bar>
+      <app-search-bar
+        :auto-fetch="true"
+        class="my-2"
+        @error="setAlert"
+      ></app-search-bar>
       <h2 class="font-semibold text-gray-800 text-l">
         ...to sort, <s>filter</s> (soon!) and <s>pick</s> (soon!) what's
         actually important for you.
@@ -57,7 +61,6 @@ export default class SearchView extends Vue {
     type: 'info' | 'warning' | 'error' | 'noError',
     message: string
   ): void {
-    console.log('cos');
     if (type === 'noError') this.clearAlert();
     else {
       this.alert.type = type;

@@ -5,9 +5,10 @@
       id="tweet_url"
       type="url"
       name="tweet_rul"
+      :value="searchInput"
       :placeholder="searchPlaceholder"
       class="w-9/12 ml-2 text-gray-900 align-middle outline-none lg:w-9/12 xl:w-10/12"
-      @input="fetchThread"
+      @input="inputChanged"
       @focus="searchPlaceholder = ''"
       @blur="searchPlaceholder = 'Twitter url...'"
     />
@@ -20,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Loader from './Loader.vue';
 import { AxiosResponse } from 'axios';
 
@@ -32,13 +33,13 @@ const SearchBarProped = Vue.extend({
 
 @Component
 export default class SearchBar extends SearchBarProped {
+  @Prop({ default: '', type: String }) value?: string;
+  @Prop({ default: false, type: Boolean }) autoFetch?: boolean;
   searchInput = '';
   searchPlaceholder = 'Twitter url...';
   loadingStatus = false;
 
-  //
-
-  get isSearchValid(): boolean {
+  isSearchValid(): boolean {
     if (this.searchInput === '') {
       this.$emit('error', 'noError', '');
       return false;
@@ -68,10 +69,9 @@ export default class SearchBar extends SearchBarProped {
     }
   }
 
-  async fetchThread(event: Event): Promise<boolean> {
-    this.searchInput = (event.currentTarget as HTMLInputElement).value || '';
+  async fetchThread(): Promise<boolean> {
     this.loadingStatus = true;
-    if (!this.isSearchValid) {
+    if (!this.isSearchValid()) {
       this.loadingStatus = false;
       return false;
     }
@@ -104,6 +104,15 @@ export default class SearchBar extends SearchBarProped {
       this.loadingStatus = false;
       return Promise.resolve(false);
     }
+  }
+
+  inputChanged(event: Event) {
+    this.searchInput = (event.currentTarget as HTMLInputElement).value || '';
+    this.autoFetch ? this.fetchThread() : null;
+  }
+
+  created() {
+    this.searchInput = this.value || '';
   }
 }
 </script>

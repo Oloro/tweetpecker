@@ -1,20 +1,19 @@
 <template>
   <div
     id="container"
-    class="w-11/12 h-screen pt-8 pb-32 mx-auto md:w-4/5 lg:w-2/3 xl:w-1/2"
+    class="w-11/12 h-screen pt-8 pb-48 mx-auto md:w-4/5 lg:w-2/3 xl:w-1/2"
   >
-    <div class="mb-16">
+    <div class="my-16 md:mb-16 md:mt-0">
       <app-search-bar
         :value="$store.state.threadUrl"
         :loading-status="isThreadLoading"
-        class="inline-block w-10/12 "
+        class="inline-block w-10/12"
       ></app-search-bar>
-      <app-dropdown :options="[1, 2, 3]" @change="optionChange"></app-dropdown>
       <div class="inline-block w-2/12">
         <app-btn class="inline-block mx-2">LOAD</app-btn>
       </div>
     </div>
-
+    <app-options-bar v-model="options"></app-options-bar>
     <div
       id="posts-list"
       class="h-full overflow-auto scrolling-touch rounded-b-lg"
@@ -27,32 +26,40 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import SearchBar from '../components/subcomponents/SearchBar.vue';
+import OptionsBar from '@/components/ThreadView/OptionsBar.vue';
 import Post from '../components/ThreadView/Post.vue';
 import { mapState } from 'vuex';
 
 @Component({
   computed: {
     ...mapState({
-      threadData: 'threadData'
+      threadDataSorted: 'threadDataSorted'
     })
   },
   components: {
     'app-post': Post,
-    'app-search-bar': SearchBar
+    'app-search-bar': SearchBar,
+    'app-options-bar': OptionsBar
   }
 })
 export default class ThreadView extends Vue {
-  options = [1, 2, 3];
   isThreadLoading = false;
   searchInput: string = this.$store.state.threadUrl;
   postsData: Array<any> = [];
+  options = { sortBy: 'Date', ascDesc: 'Descending' };
+
+  @Watch('options', { deep: true })
+  async onOptionsChange() {
+    await this.$store.dispatch('sortData', this.options);
+    this.buildPostsData();
+  }
 
   // injects users info to posts info
-  buildPostsData(this: any) {
-    this.postsData = this.threadData.posts.map((v: any) => {
-      const [user] = this.threadData.users.filter(
+  buildPostsData() {
+    this.postsData = this.$store.state.threadDataSorted.posts.map((v: any) => {
+      const [user] = this.$store.state.threadDataSorted.users.filter(
         (el: any) => el.idStr === v.userIdStr
       );
       return {
@@ -62,11 +69,8 @@ export default class ThreadView extends Vue {
     });
   }
 
-  optionChange(option: string) {
-    console.log(option);
-  }
-
-  created() {
+  async created() {
+    await this.$store.dispatch('sortData', this.options);
     this.buildPostsData();
   }
 }

@@ -3,7 +3,7 @@
     id="container"
     class="w-11/12 h-screen pt-8 pb-48 mx-auto md:w-4/5 lg:w-2/3 xl:w-1/2"
   >
-    <div class="my-16 md:mb-16 md:mt-0">
+    <div class="my-16 md:mb-16 md:mt-0 animate">
       <app-search-bar
         :value="$store.state.threadUrl"
         :loading-status="isThreadLoading"
@@ -13,10 +13,10 @@
         <app-btn class="inline-block mx-2">LOAD</app-btn>
       </div>
     </div>
-    <app-options-bar v-model="options"></app-options-bar>
+    <app-options-bar v-model="options" class="animate"></app-options-bar>
     <div
       id="posts-list"
-      class="h-full overflow-auto scrolling-touch rounded-b-lg"
+      class="h-full overflow-auto scrolling-touch rounded-b-lg animate"
     >
       <div v-for="post in postsData" :key="post.content.idStr">
         <app-post :post-data="post"></app-post>
@@ -30,6 +30,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import SearchBar from '../components/subcomponents/SearchBar.vue';
 import OptionsBar from '@/components/ThreadView/OptionsBar.vue';
 import Post from '../components/ThreadView/Post.vue';
+import anime from 'animejs';
 import { mapState } from 'vuex';
 
 @Component({
@@ -72,6 +73,24 @@ export default class ThreadView extends Vue {
   async created() {
     await this.$store.dispatch('sortData', this.options);
     this.buildPostsData();
+  }
+
+  mounted() {
+    const elementsToStagger = document
+      .getElementById('container')! // forbidden non-null assertion?
+      .querySelectorAll('.animate');
+
+    elementsToStagger.forEach(el => {
+      (el as HTMLElement).style.opacity = '0';
+      (el as HTMLElement).style.transform = 'translateY(-20px)';
+    });
+    anime({
+      targets: elementsToStagger,
+      translateY: 20,
+      opacity: 1,
+      duration: 1000,
+      delay: anime.stagger(20, { start: 300 })
+    });
   }
 }
 </script>

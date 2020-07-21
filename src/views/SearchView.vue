@@ -81,7 +81,7 @@ export default class SearchView extends Vue {
 
     elementsToStagger.forEach(el => {
       (el as HTMLElement).style.opacity = '0';
-      (el as HTMLElement).style.transform = 'translateY(-20)';
+      (el as HTMLElement).style.transform = 'translateY(-20px)';
     });
     anime({
       targets: elementsToStagger,

@@ -24,7 +24,7 @@ export default new Vuex.Store({
     SORT_DATA(
       state,
       data: {
-        sortBy: 'Date' | 'Likes' | 'Retweets' | 'Replies';
+        sortBy: 'Date' | 'Likes' | 'Retweets' | 'Replies'; // fix this!
         ascDesc: string;
       }
     ) {

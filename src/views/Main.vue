@@ -1,7 +1,7 @@
 <template>
   <div class="bg-blue-200">
     <img
-      src="../assets/Logo.svg"
+      src="../assets/Logo_no_tree.svg"
       class="absolute w-24 ml-4 -mt-2 duration-100 transition-width md:w-48 md:-mt-6"
       alt=""
     />

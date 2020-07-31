@@ -1,11 +1,5 @@
 module.exports = {
-  purge: [
-    './views/**/*.vue',
-    './components/**/*.vue',
-    './plugins/**/*.vue',
-    './static/**/*.vue',
-    './store/**/*.vue'
-  ],
+  purge: [],
   theme: {
     extend: {
       transitionProperty: {

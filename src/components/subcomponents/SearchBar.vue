@@ -78,7 +78,7 @@ export default class SearchBar extends SearchBarProped {
     let thread;
     try {
       thread = await this.axios.get(
-        `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/api/tweet`,
+        `${process.env.VUE_APP_API_URL}:${process.env.VUE_APP_API_PORT}/tweet`,
         {
           timeout: 15000,
           params: {
